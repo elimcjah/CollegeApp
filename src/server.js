@@ -25,6 +25,28 @@ app.get('/schools', async (req, res) => {
     }
 });
 
+app.post('/schools', async (req, res) => {
+    const { name, city, state, zip, circulation } = req.body;
+    let numberOfPropertiesOnRequest = Object.keys(req.body).length;
+    if(numberOfPropertiesOnRequest !== 5){
+        res.json('Request body has incorrect number of properties');
+        throw new Error('Request body has incorrect number of properties');
+    }
+    try {
+        const result = await prisma.createCollege({
+            name,
+            city,
+            state,
+            zip,
+            circulation
+        });
+        res.json(result);
+    } catch (e) {
+        res.json(e);
+        throw new Error(e);
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

@@ -1,4 +1,9 @@
-type User {
+type College {
   id: ID! @unique
   name: String!
+  city: String!
+  state: String!
+  zip: String!
+  circulation: Int!
+  deleted: Boolean! @default(value: "false")
 }

@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    return res.send(`College App Version ${packageJSON.version}`);
+    return res.status(400).send(`College App Version ${packageJSON.version}`);
 });
 
 app.get('/schools', async (req, res) => {
@@ -34,11 +34,41 @@ app.get('/schools/:id', async (req, res) => {
             }
         });
         if(school.length === 0) {
-            res.json('College Not Found.');
+            res.status(400).json('College Not Found.');
+        } else {
+            res.json(school);
         }
-        res.json(school);
     } catch (e) {
         res.json(e);
+        throw new Error(e);
+    }
+});
+
+app.put('/schools/:id', async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    try {
+        const schoolExists = await prisma.$exists.college({
+            AND: [
+                { id },
+                { deleted: false }
+            ]});
+        if(!schoolExists) {
+            res.status(400).json('College not found.')
+        }
+
+        console.log(data);
+        const updatedSchool = await prisma.updateCollege({
+            data,
+            where: {
+                id
+            }
+        });
+        console.log('updatedSchool: ', updatedSchool);
+        res.json(updatedSchool);
+    } catch (e) {
+        res.status(500).json(e);
         throw new Error(e);
     }
 });
@@ -47,21 +77,21 @@ app.post('/schools', async (req, res) => {
     const { name, city, state, zip, circulation } = req.body;
     let numberOfPropertiesOnRequest = Object.keys(req.body).length;
     if(numberOfPropertiesOnRequest !== 5){
-        res.json('Request body has incorrect number of properties');
-        throw new Error('Request body has incorrect number of properties');
-    }
-    try {
-        const result = await prisma.createCollege({
-            name,
-            city,
-            state,
-            zip,
-            circulation
-        });
-        res.json(result);
-    } catch (e) {
-        res.json(e);
-        throw new Error(e);
+        res.status(400).json('Request body has incorrect number of properties');
+    } else {
+        try {
+            const result = await prisma.createCollege({
+                name,
+                city,
+                state,
+                zip,
+                circulation
+            });
+            res.json(result);
+        } catch (e) {
+            res.status(500).json(e);
+            throw new Error(e);
+        }
     }
 });
 

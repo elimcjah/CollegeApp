@@ -1,1 +1,1 @@
-web: npm prisma && npm start
+web: npm run prisma && npm start

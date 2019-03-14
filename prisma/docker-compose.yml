@@ -9,7 +9,7 @@ services:
       PRISMA_CONFIG: |
         port: 4466
         # uncomment the next line and provide the env var PRISMA_MANAGEMENT_API_SECRET=my-secret to activate cluster security
-        # managementApiSecret: 6467f5a836603c2af14c16042489ac4ad17a47d2
+        managementApiSecret: 6467f5a836603c2af14c16042489ac4ad17a47d2
         databases:
           default:
             connector: postgres

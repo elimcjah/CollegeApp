@@ -1,5 +1,5 @@
 #endpoint: ${env:PRISMA_ENDPOINT}
-endpoint: https://college-app-api-39774d3899.herokuapp.com/CollegeApp/prod/CollegeApp/prod
+endpoint: https://college-app-api-39774d3899.herokuapp.com/CollegeApp/prod
 datamodel: datamodel.prisma
 secret: 6467f5a836603c2af14c16042489ac4ad17a47d2
 

@@ -25,6 +25,24 @@ app.get('/schools', async (req, res) => {
     }
 });
 
+app.get('/schools/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const school = await prisma.colleges({
+            where: {
+                AND: [{ id }, { deleted: false }]
+            }
+        });
+        if(school.length === 0) {
+            res.json('College Not Found.');
+        }
+        res.json(school);
+    } catch (e) {
+        res.json(e);
+        throw new Error(e);
+    }
+});
+
 app.post('/schools', async (req, res) => {
     const { name, city, state, zip, circulation } = req.body;
     let numberOfPropertiesOnRequest = Object.keys(req.body).length;

@@ -6,4 +6,19 @@ type College {
   zip: String!
   circulation: Int!
   deleted: Boolean! @default(value: "false")
+  products: [Product!]! @relation(name: "ProductsToCollege", onDelete: CASCADE)
+}
+
+type Product {
+  id: ID! @unique
+  name: ProductType!
+  price: Float!
+  college: College! @relation(name: "ProductsToCollege", onDelete: SET_NULL)
+}
+
+enum ProductType {
+  FULL_PAGE
+  HALF_PAGE
+  QUARTER_PAGE
+  EIGHTH_PAGE
 }

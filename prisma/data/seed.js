@@ -1,4 +1,4 @@
-const { prisma } = require('../generated/prisma-client');
+const { prisma } = require('../../../prisma/generated/prisma-client');
 
 const { schools } = require('./testData');
 

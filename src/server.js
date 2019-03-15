@@ -55,18 +55,43 @@ app.put('/schools/:id', async (req, res) => {
                 { deleted: false }
             ]});
         if(!schoolExists) {
-            res.status(400).json('College not found.')
+            res.status(400).json('College not found.');
+        } else {
+            const updatedSchool = await prisma.updateCollege({
+                data,
+                where: {
+                    id
+                }
+            });
+            res.json(updatedSchool);
         }
+    } catch (e) {
+        res.status(500).json(e);
+        throw new Error(e);
+    }
+});
 
-        console.log(data);
-        const updatedSchool = await prisma.updateCollege({
-            data,
-            where: {
-                id
-            }
-        });
-        console.log('updatedSchool: ', updatedSchool);
-        res.json(updatedSchool);
+app.delete('/schools/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const schoolExists = await prisma.$exists.college({
+            AND: [
+                { id },
+                { deleted: false }
+            ]});
+        if(!schoolExists) {
+            res.status(400).json('College not found.');
+        } else {
+            const deletedSchool = await prisma.updateCollege({
+                data: {
+                    deleted: true
+                },
+                where: {
+                    id
+                }
+            });
+            res.json(deletedSchool);
+        }
     } catch (e) {
         res.status(500).json(e);
         throw new Error(e);
